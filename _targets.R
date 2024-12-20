@@ -68,7 +68,11 @@ list(
   tar_target(
     fastp_env,
     {
-      condathis::create_env("fastp=0.23.4", env_name = "fastp-env", method = "native")
+      condathis::create_env(
+        "fastp=0.23.4",
+        env_name = "fastp-env",
+        overwrite = TRUE
+      )
       "fastp-env"
     }
   ),
@@ -95,14 +99,31 @@ list(
   # @@@@@@@@@@@@
 
   # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  # ___Prepare MicroMamba Env for Download and Align -----
+  # ___Prepare Micromamba Envs for Download and Align -----
   # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
   # Create environment and install gsutils
   tar_target(
+    wget_env,
+    {
+      if (.Platform$OS.type %in% c("windows")) {
+        package_string <- "m2-wget"
+      } else {
+        package_string <- "wget"
+      }
+      condathis::create_env(
+        packages = package_string,
+        env_name = "wget-env",
+        overwrite = TRUE
+      )
+      "wget-env"
+    }
+  ),
+  # Create environment and install gsutils
+  tar_target(
     gsutil_env,
     {
-      condathis::create_env("gsutil==5.25", env_name = "gsutil-env", method = "native")
+      condathis::create_env("gsutil=5.33", env_name = "gsutil-env", overwrite = TRUE)
       "gsutil-env"
     }
   ),
@@ -110,7 +131,7 @@ list(
   tar_target(
     samtools_env,
     {
-      condathis::create_env("samtools=1.17", env_name = "samtools-env", method = "native")
+      condathis::create_env("samtools=1.17", env_name = "samtools-env", overwrite = TRUE)
       "samtools-env"
     }
   ),
@@ -118,7 +139,7 @@ list(
   tar_target(
     minimap_env,
     {
-      condathis::create_env("minimap2=2.26", env_name = "minimap-env", method = "native")
+      condathis::create_env("minimap2=2.26", env_name = "minimap-env", overwrite = TRUE)
       "minimap-env"
     }
   ),
@@ -132,7 +153,8 @@ list(
     reference_files,
     download_references_hg19(
       path_download = here::here("data", "outputs", "reference"),
-      gsutil_conda_env = gsutil_env
+      gsutil_conda_env = gsutil_env,
+      wget_conda_env = wget_env
     ),
     format = "file"
   ),

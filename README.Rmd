@@ -41,27 +41,23 @@ environment, while still maintaining reproducibility.
 
 The package `condathis` is used to: 
 
-
 1) Create environments with specific versions of the CLI tools needed. See example below.
 
-``` r
-## Create an environment with gsutil v5.25
-condathis::create_env("gsutil==5.25", env_name = "gsutil-env")
+```{r, eval=FALSE}
+## Create an environment with gsutil v5.33
+condathis::create_env("gsutil==5.33", env_name = "gsutil-env")
 ```
 
 2)  Interact with those environments and launch the CLI commands. See example below.
 
-``` r
+```{r, eval=FALSE}
 url_cloude_storage <- "gs://gcp-public-data--broad-references/Homo_sapiens_assembly19_1000genomes_decoy/Homo_sapiens_assembly19_1000genomes_decoy.fasta"
 
 # Same as processx::run but needs to indicate the envname
-condathis::run("gsutil", 
-                  "-m", 
-                  "cp", 
-                  url_cloude_storage,  # what to copy
-                  here::here("data", "outputs"), # where to save the data
-                  env_name = "gsutil-env"
-                  )
+condathis::run(
+  "gsutil", "-m", "cp", url_cloude_storage, here::here("data", "outputs"), # where to save the data
+  env_name = "gsutil-env"
+)
 ```
 
 --> **R wrapper functions** that incorporate specific `condathis` CLI commands
@@ -69,8 +65,8 @@ are created to return paths that can be used by `tar_files`. <--
 
 ## Folders and files
 
--   All the **wrapper functions** are stored in `code/targets_functions.R`.
--   `config/`: Contains the `mapping.csv` that maps subjects with
+-   All the **wrapper functions** are stored in [`code/targets_functions.R`](./code/targets_functions.R).
+-   `config/`: Contains the [`mapping.csv`](./config/mapping.csv) that maps subjects with
     corresponding files.
 -   `data/raw/`: Contains some example FASTQ files (note that the files
     have been trimmed to contain only a few reads for easy processing).
@@ -88,4 +84,10 @@ To restore all the project dependencies, run: `renv::restore() `.
 
 All outputs will be generated in `data/outputs`.
 
+### Run Pipeline with `targets`
 
+```{r}
+library(targets)
+# tar_dir()
+targets::tar_make()
+```

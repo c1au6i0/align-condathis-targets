@@ -30,18 +30,22 @@ fastp <- function(r1,
   json_out <- fs::path(path_folder_out_qc, json_name)
 
   # This is where we use condathis <----
-  condathis::run("fastp",
-    "-i", r1, "-I", r2,
-    "-o", r1_r2_out["r1"], "-O", r1_r2_out["r2"],
-    "-h", html_out, "-j", json_out, other_args,
-    env_name = conda_env, method = "native", echo = TRUE
+  condathis::run(
+    "fastp",
+    "-i", r1,
+    "-I", r2,
+    "-o", r1_r2_out["r1"],
+    "-O", r1_r2_out["r2"],
+    "-h", html_out,
+    "-j", json_out,
+    other_args,
+    env_name = conda_env
   )
 
   out <- c(r1_r2_out["r1"], r1_r2_out["r2"], html_out, json_out)
   names(out) <- c("r1", "r2", "qc_html", "qc_json")
   out
 }
-
 
 #' comsub
 #'
@@ -73,8 +77,9 @@ comsub <- function(x) {
 #' Download references files from broad ang genecode
 #'
 #' @param path_download Where to save data.
-#' @param gsutil_conda_env Name of the condathis generated environemnt for gsutil.
-download_references_hg19 <- function(path_download, gsutil_conda_env) {
+#' @param gsutil_conda_env Name of the condathis generated environment for `gsutil`.
+#' @param wget_conda_env Name of the condathis generated environment for `wget`.
+download_references_hg19 <- function(path_download, gsutil_conda_env, wget_conda_env) {
   if (!file.exists(path_download)) {
     fs::dir_create(path_download)
   }
@@ -82,14 +87,18 @@ download_references_hg19 <- function(path_download, gsutil_conda_env) {
   transcripts_ftp <- "http://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_38/GRCh37_mapping/gencode.v38lift37.transcripts.fa.gz"
 
   transcripts_out <- fs::path(path_download, basename(transcripts_ftp))
-
-  cmd_sys <- paste("wget -O", transcripts_out, transcripts_ftp, sep = " ")
-  system(cmd_sys)
+  condathis::run(
+    "wget", "-O", transcripts_out, transcripts_ftp,
+    env_name = wget_conda_env
+  )
 
   reference <- "gs://gcp-public-data--broad-references/Homo_sapiens_assembly19_1000genomes_decoy/Homo_sapiens_assembly19_1000genomes_decoy.fasta"
 
   # This is where we use condathis <----
-  condathis::run("gsutil", "-m", "cp", reference, path_download, env_name = gsutil_conda_env, method = "native")
+  condathis::run(
+    "gsutil", "-m", "cp", reference, path_download,
+    env_name = gsutil_conda_env
+  )
 
   # path are saved in a v0 folder
 
@@ -99,7 +108,7 @@ download_references_hg19 <- function(path_download, gsutil_conda_env) {
 
 #' fastqc
 #'
-#' Download references files from broad ang genecode
+#' Download references files from broad and GENCODE
 #'
 #' @param path_folder_out Where to save data.
 #' @param path_fastq Path of fastq.
@@ -116,7 +125,10 @@ fastqc <- function(path_folder_out, path_fastq, conda_env, threads = 1, other_ar
   cli::cli_alert_info(paste0("Running: ", cmd))
 
   # This is where we use condathis <----
-  condathis::run("fastqc", "-o", path_folder_out, "-t", threads, path_fastq, env_name = conda_env, method = "native")
+  condathis::run(
+    "fastqc", "-o", path_folder_out, "-t", threads, path_fastq,
+    env_name = conda_env
+  )
 
   basename_fastq <- gsub("\\..*$", "", basename(path_fastq))
   ext_out <- c("_fastqc.html", "_fastqc.zip")
@@ -148,10 +160,13 @@ minimap2_index <- function(reference_files, threads = 1, path_folder_out, conda_
 
   cmd <- paste("minimap2 -t", threads, "-d", path_mmi, path_fasta, sep = " ")
 
-  cli::cli_alert_info("Running ", cmd)
+  cli::cli_alert_info("Running: ", cmd)
 
   # This is where we use condathis <----
-  condathis::run("minimap2", "-t", threads, "-d", path_mmi, path_fasta, env_name = conda_env, method = "native")
+  condathis::run(
+    "minimap2", "-t", threads, "-d", path_mmi, path_fasta,
+    env_name = conda_env
+  )
 
   path_mmi
 }
@@ -180,12 +195,12 @@ minimap2_align <- function(reference_mmi, r1, r2, threads = 1, path_folder_out, 
   path_sam <- fs::path(path_folder_out, file_name_out)
 
   # This is where we use condathis <----
-  condathis::run("minimap2", "-ax", "sr", "-t", threads,
+  condathis::run(
+    "minimap2", "-ax", "sr", "-t", threads,
     reference_mmi, r1_r2["r1"], r1_r2["r2"],
     other_args,
     stdout = path_sam,
-    env_name = conda_env,
-    method = "native"
+    env_name = conda_env
   )
 
   path_sam
@@ -212,12 +227,11 @@ sam_to_bam <- function(path_sam, path_tmp, path_folder_out, threads, conda_env) 
   path_bam <- file.path(path_folder_out, gsub("sam$", "bam", basename(path_sam)))
 
   # This is where we use condathis <----
-  condathis::run("samtools", "view", "-hb", "-@", threads, path_sam,
+  condathis::run(
+    "samtools", "view", "-hb", "-@", threads, path_sam,
     stdout = path_bam,
-    env_name = conda_env,
-    method = "native"
+    env_name = conda_env
   )
-
   path_bam
 }
 
@@ -239,8 +253,14 @@ sort_index <- function(path_bam, path_tmp, path_folder_out, threads, conda_env) 
   path_sorted_bai <- paste0(path_sorted_bam, ".bai")
 
   # This is where we use condathis <----
-  condathis::run("samtools", "sort", "-T", path_tmp, path_bam, "-@", threads, "-o", path_sorted_bam, env_name = conda_env, method = "native")
-  condathis::run("samtools", "index", "-@", threads, path_sorted_bam, env_name = conda_env, method = "native")
+  condathis::run(
+    "samtools", "sort", "-T", path_tmp, path_bam, "-@", threads, "-o", path_sorted_bam,
+    env_name = conda_env
+  )
+  condathis::run(
+    "samtools", "index", "-@", threads, path_sorted_bam,
+    env_name = conda_env
+  )
 
   c(path_sorted_bam, path_sorted_bai)
 }
