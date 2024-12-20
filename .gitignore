@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.httr-oauth
+.DS_Store
+._.DS_Store
+._.*
+/data/outputs/*
+/data/tmp/*
+.future/*
