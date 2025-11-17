@@ -123,7 +123,7 @@ list(
   tar_target(
     gsutil_env,
     {
-      condathis::create_env("gsutil=5.33", env_name = "gsutil-env", overwrite = TRUE)
+      condathis::create_env("gsutil=5.35", env_name = "gsutil-env", overwrite = TRUE)
       "gsutil-env"
     }
   ),
@@ -131,7 +131,7 @@ list(
   tar_target(
     samtools_env,
     {
-      condathis::create_env("samtools=1.17", env_name = "samtools-env", overwrite = TRUE)
+      condathis::create_env("samtools=1.22.*", env_name = "samtools-env", overwrite = TRUE)
       "samtools-env"
     }
   ),
@@ -139,7 +139,7 @@ list(
   tar_target(
     minimap_env,
     {
-      condathis::create_env("minimap2=2.26", env_name = "minimap-env", overwrite = TRUE)
+      condathis::create_env("minimap2=2.30.*", env_name = "minimap-env", overwrite = TRUE)
       "minimap-env"
     }
   ),
