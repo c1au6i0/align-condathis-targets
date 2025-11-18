@@ -74,7 +74,7 @@ comsub <- function(x) {
 
 #' download references hg19
 #'
-#' Download references files from broad ang genecode
+#' Download references files from broad and gencode
 #'
 #' @param path_download Where to save data.
 #' @param gsutil_conda_env Name of the condathis generated environment for `gsutil`.
@@ -84,7 +84,7 @@ download_references_hg19 <- function(path_download, gsutil_conda_env, wget_conda
     fs::dir_create(path_download)
   }
 
-  transcripts_ftp <- "http://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_38/GRCh37_mapping/gencode.v38lift37.transcripts.fa.gz"
+  transcripts_ftp <- "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_38/GRCh37_mapping/gencode.v38lift37.transcripts.fa.gz"
 
   transcripts_out <- fs::path(path_download, basename(transcripts_ftp))
   condathis::run(
@@ -170,7 +170,6 @@ minimap2_index <- function(reference_files, threads = 1, path_folder_out, conda_
 
   path_mmi
 }
-
 
 #' align fastq
 #'
