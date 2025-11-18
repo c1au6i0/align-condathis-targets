@@ -34,15 +34,15 @@ environment, while still maintaining reproducibility.
 
 The package `condathis` is used to:
 
-1)  Create environments with specific versions of the CLI tools needed.
+1) Create environments with specific versions of the CLI tools needed.
     See example below.
 
 ``` r
-## Create an environment with gsutil v5.33
-condathis::create_env("gsutil==5.33", env_name = "gsutil-env")
+## Create an environment with gsutil v5.35
+condathis::create_env("gsutil==5.35", env_name = "gsutil-env")
 ```
 
-2)  Interact with those environments and launch the CLI commands. See
+2) Interact with those environments and launch the CLI commands. See
     example below.
 
 ``` r
@@ -89,102 +89,23 @@ library(targets)
 targets::tar_make()
 #> Loading required package: parallelly
 #> here() starts at /Users/luciorq/workspaces/temp/align-condathis-targets
-#> + reference_mmi dispatched
-#> ℹ Running:
-#> ✔ reference_mmi completed [49.5s, 7.23 GB]
-#> + rna_mapping dispatched
-#> ✔ rna_mapping completed [4ms, 320 B]
+#> + samtools_env dispatched
+#> ✔ samtools_env completed [7s, 65 B]
+#> + minimap_env dispatched
+#> ✔ minimap_env completed [3s, 64 B]
+#> + fastp_env dispatched
+#> ✔ fastp_env completed [2.9s, 62 B]
+#> + gsutil_env dispatched
+#> ✔ gsutil_env completed [10.5s, 63 B]
+#> + wget_env dispatched
+#> ✔ wget_env completed [2.9s, 61 B]
 #> + trimmed_fastq_qc declared [2 branches]
-#> Read1 before filtering:
-#> total reads: 1086
-#> total bases: 108600
-#> Q20 bases: 0(0%)
-#> Q30 bases: 0(0%)
-#>
-#> Read2 before filtering:
-#> total reads: 1086
-#> total bases: 108600
-#> Q20 bases: 0(0%)
-#> Q30 bases: 0(0%)
-#>
-#> Read1 after filtering:
-#> total reads: 0
-#> total bases: 0
-#> Q20 bases: 0(nan%)
-#> Q30 bases: 0(nan%)
-#>
-#> Read2 after filtering:
-#> total reads: 0
-#> total bases: 0
-#> Q20 bases: 0(nan%)
-#> Q30 bases: 0(nan%)
-#>
-#> Filtering result:
-#> reads passed filter: 0
-#> reads failed due to low quality: 2172
-#> reads failed due to too many N: 0
-#> reads failed due to too short: 0
-#> reads with adapter trimmed: 0
-#> bases trimmed due to adapters: 0
-#>
-#> Duplication rate: 0%
-#>
-#> Insert size peak (evaluated by paired-end reads): 110
-#>
-#> JSON report: /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/fastp_qc/subj11_fastp.json
-#> HTML report: /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/fastp_qc/subj11_fastp.html
-#>
-#> fastp -i /Users/luciorq/workspaces/temp/align-condathis-targets/data/raw/fastq/subj1_L001_R1_001.fastq.gz -I /Users/luciorq/workspaces/temp/align-condathis-targets/data/raw/fastq/subj1_L001_R2_001.fastq.gz -o /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/trimmed/subj1_L001_R1_001_trimmed.fastq.gz -O /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/trimmed/subj1_L001_R2_001_trimmed.fastq.gz -h /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/fastp_qc/subj11_fastp.html -j /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/fastp_qc/subj11_fastp.json
-#> fastp v0.23.4, time used: 0 seconds
-#> Read1 before filtering:
-#> total reads: 1145
-#> total bases: 114500
-#> Q20 bases: 0(0%)
-#> Q30 bases: 0(0%)
-#>
-#> Read2 before filtering:
-#> total reads: 1145
-#> total bases: 114500
-#> Q20 bases: 0(0%)
-#> Q30 bases: 0(0%)
-#>
-#> Read1 after filtering:
-#> total reads: 0
-#> total bases: 0
-#> Q20 bases: 0(nan%)
-#> Q30 bases: 0(nan%)
-#>
-#> Read2 after filtering:
-#> total reads: 0
-#> total bases: 0
-#> Q20 bases: 0(nan%)
-#> Q30 bases: 0(nan%)
-#>
-#> Filtering result:
-#> reads passed filter: 0
-#> reads failed due to low quality: 2290
-#> reads failed due to too many N: 0
-#> reads failed due to too short: 0
-#> reads with adapter trimmed: 6
-#> bases trimmed due to adapters: 102
-#>
-#> Duplication rate: 0%
-#>
-#> Insert size peak (evaluated by paired-end reads): 120
-#>
-#> JSON report: /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/fastp_qc/subj21_fastp.json
-#> HTML report: /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/fastp_qc/subj21_fastp.html
-#>
-#> fastp -i /Users/luciorq/workspaces/temp/align-condathis-targets/data/raw/fastq/subj2_L001_R1_001.fastq.gz -I /Users/luciorq/workspaces/temp/align-condathis-targets/data/raw/fastq/subj2_L001_R2_001.fastq.gz -o /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/trimmed/subj2_L001_R1_001_trimmed.fastq.gz -O /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/trimmed/subj2_L001_R2_001_trimmed.fastq.gz -h /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/fastp_qc/subj21_fastp.html -j /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/fastp_qc/subj21_fastp.json
-#> fastp v0.23.4, time used: 0 seconds
-#> ✔ trimmed_fastq_qc completed [468ms, 936.66 kB]
+#> ✔ trimmed_fastq_qc completed [441ms, 936.66 kB]
 #> + mapped_sams declared [2 branches]
-#> ✔ mapped_sams completed [10.5s, 5.33 kB]
+#> ✔ mapped_sams completed [11s, 5.33 kB]
 #> + bam_files declared [2 branches]
-#> ✔ bam_files completed [255ms, 3.19 kB]
 #> + sorted_bams declared [2 branches]
-#> ✔ sorted_bams completed [426ms, 4.68 kB]
-#> ✔ ended pipeline [1m 9.6s, 10 completed, 9 skipped]
+#> ✔ ended pipeline [42.6s, 9 completed, 10 skipped]
 ```
 
 Check output

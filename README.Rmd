@@ -44,8 +44,8 @@ The package `condathis` is used to:
 1) Create environments with specific versions of the CLI tools needed. See example below.
 
 ```{r, eval=FALSE}
-## Create an environment with gsutil v5.33
-condathis::create_env("gsutil==5.33", env_name = "gsutil-env")
+## Create an environment with gsutil v5.35
+condathis::create_env("gsutil==5.35", env_name = "gsutil-env")
 ```
 
 2) Interact with those environments and launch the CLI commands. See example below.
