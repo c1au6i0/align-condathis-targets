@@ -89,7 +89,8 @@ download_references_hg19 <- function(path_download, gsutil_conda_env, wget_conda
   transcripts_out <- fs::path(path_download, basename(transcripts_ftp))
   condathis::run(
     "wget", "-O", transcripts_out, transcripts_ftp,
-    env_name = wget_conda_env
+    env_name = wget_conda_env,
+    verbose = "silent"
   )
 
   reference <- "gs://gcp-public-data--broad-references/Homo_sapiens_assembly19_1000genomes_decoy/Homo_sapiens_assembly19_1000genomes_decoy.fasta"
@@ -97,7 +98,8 @@ download_references_hg19 <- function(path_download, gsutil_conda_env, wget_conda
   # This is where we use condathis <----
   condathis::run(
     "gsutil", "-m", "cp", reference, path_download,
-    env_name = gsutil_conda_env
+    env_name = gsutil_conda_env,
+    verbose = "silent"
   )
 
   # path are saved in a v0 folder
@@ -127,7 +129,8 @@ fastqc <- function(path_folder_out, path_fastq, conda_env, threads = 1, other_ar
   # This is where we use condathis <----
   condathis::run(
     "fastqc", "-o", path_folder_out, "-t", threads, path_fastq,
-    env_name = conda_env
+    env_name = conda_env,
+    verbose = "silent"
   )
 
   basename_fastq <- gsub("\\..*$", "", basename(path_fastq))
@@ -165,7 +168,8 @@ minimap2_index <- function(reference_files, threads = 1, path_folder_out, conda_
   # This is where we use condathis <----
   condathis::run(
     "minimap2", "-t", threads, "-d", path_mmi, path_fasta,
-    env_name = conda_env
+    env_name = conda_env,
+    verbose = "silent"
   )
 
   path_mmi
@@ -199,7 +203,8 @@ minimap2_align <- function(reference_mmi, r1, r2, threads = 1, path_folder_out, 
     reference_mmi, r1_r2["r1"], r1_r2["r2"],
     other_args,
     stdout = path_sam,
-    env_name = conda_env
+    env_name = conda_env,
+    verbose = "silent"
   )
 
   path_sam
@@ -229,7 +234,8 @@ sam_to_bam <- function(path_sam, path_tmp, path_folder_out, threads, conda_env) 
   condathis::run(
     "samtools", "view", "-hb", "-@", threads, path_sam,
     stdout = path_bam,
-    env_name = conda_env
+    env_name = conda_env,
+    verbose = "silent"
   )
   path_bam
 }
@@ -254,11 +260,13 @@ sort_index <- function(path_bam, path_tmp, path_folder_out, threads, conda_env) 
   # This is where we use condathis <----
   condathis::run(
     "samtools", "sort", "-T", path_tmp, path_bam, "-@", threads, "-o", path_sorted_bam,
-    env_name = conda_env
+    env_name = conda_env,
+    verbose = "silent"
   )
   condathis::run(
     "samtools", "index", "-@", threads, path_sorted_bam,
-    env_name = conda_env
+    env_name = conda_env,
+    verbose = "silent"
   )
 
   c(path_sorted_bam, path_sorted_bai)
