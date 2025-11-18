@@ -1,8 +1,8 @@
 ---
 output: github_document
-editor_options: 
-  markdown: 
-    wrap: 72
+editor_options:
+  markdown:
+    wrap: 80
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -39,7 +39,7 @@ environment, while still maintaining reproducibility.
 
 ## How condathis is used
 
-The package `condathis` is used to: 
+The package `condathis` is used to:
 
 1) Create environments with specific versions of the CLI tools needed. See example below.
 
@@ -48,7 +48,7 @@ The package `condathis` is used to:
 condathis::create_env("gsutil==5.33", env_name = "gsutil-env")
 ```
 
-2)  Interact with those environments and launch the CLI commands. See example below.
+2) Interact with those environments and launch the CLI commands. See example below.
 
 ```{r, eval=FALSE}
 url_cloude_storage <- "gs://gcp-public-data--broad-references/Homo_sapiens_assembly19_1000genomes_decoy/Homo_sapiens_assembly19_1000genomes_decoy.fasta"
@@ -90,4 +90,18 @@ All outputs will be generated in `data/outputs`.
 library(targets)
 # tar_dir()
 targets::tar_make()
+```
+
+Check output
+
+```{r}
+sorted_bams_path <- targets::tar_read(sorted_bams)
+
+bam_header <- condathis::run(
+  "samtools", "view", "-H", sorted_bams_path[1],
+  env_name = "samtools-env",
+  verbose = "silent"
+)
+
+cat(bam_header$stdout)
 ```

@@ -123,7 +123,11 @@ list(
   tar_target(
     gsutil_env,
     {
-      condathis::create_env("gsutil=5.35", env_name = "gsutil-env", overwrite = TRUE)
+      condathis::create_env(
+        "gsutil=5.35",
+        env_name = "gsutil-env",
+        overwrite = TRUE
+      )
       "gsutil-env"
     }
   ),
@@ -131,7 +135,11 @@ list(
   tar_target(
     samtools_env,
     {
-      condathis::create_env("samtools=1.22.*", env_name = "samtools-env", overwrite = TRUE)
+      condathis::create_env(
+        "samtools=1.22.*",
+        env_name = "samtools-env",
+        overwrite = TRUE
+      )
       "samtools-env"
     }
   ),
@@ -139,7 +147,11 @@ list(
   tar_target(
     minimap_env,
     {
-      condathis::create_env("minimap2=2.30.*", env_name = "minimap-env", overwrite = TRUE)
+      condathis::create_env(
+        "minimap2=2.30.*",
+        env_name = "minimap-env",
+        overwrite = TRUE
+      )
       "minimap-env"
     }
   ),
@@ -194,7 +206,8 @@ list(
   # use a wrapper function in here("code", "targets_functions.R")
   tar_target(
     bam_files,
-    sam_to_bam(mapped_sams,
+    sam_to_bam(
+      mapped_sams,
       path_tmp = here::here("data", "tmp"),
       path_folder_out = here::here("data", "outputs", "bams"),
       threads = 2,
@@ -206,7 +219,8 @@ list(
   # use a wrapper function in here("code", "targets_functions.R")
   tar_target(
     sorted_bams, # Sorted and Indexed
-    sort_index(bam_files,
+    sort_index(
+      bam_files,
       path_tmp = here::here("data", "tmp"),
       path_folder_out = here::here("data", "outputs", "sorted_bams"),
       threads = 2,
