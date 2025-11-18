@@ -71,7 +71,8 @@ list(
       condathis::create_env(
         "fastp=0.23.4",
         env_name = "fastp-env",
-        overwrite = TRUE
+        overwrite = TRUE,
+        verbose = "silent"
       )
       "fastp-env"
     }
@@ -114,7 +115,8 @@ list(
       condathis::create_env(
         packages = package_string,
         env_name = "wget-env",
-        overwrite = TRUE
+        overwrite = TRUE,
+        verbose = "silent"
       )
       "wget-env"
     }
@@ -123,7 +125,12 @@ list(
   tar_target(
     gsutil_env,
     {
-      condathis::create_env("gsutil=5.33", env_name = "gsutil-env", overwrite = TRUE)
+      condathis::create_env(
+        "gsutil=5.35",
+        env_name = "gsutil-env",
+        overwrite = TRUE,
+        verbose = "silent"
+      )
       "gsutil-env"
     }
   ),
@@ -131,7 +138,12 @@ list(
   tar_target(
     samtools_env,
     {
-      condathis::create_env("samtools=1.17", env_name = "samtools-env", overwrite = TRUE)
+      condathis::create_env(
+        "samtools=1.22.*",
+        env_name = "samtools-env",
+        overwrite = TRUE,
+        verbose = "silent"
+      )
       "samtools-env"
     }
   ),
@@ -139,7 +151,12 @@ list(
   tar_target(
     minimap_env,
     {
-      condathis::create_env("minimap2=2.26", env_name = "minimap-env", overwrite = TRUE)
+      condathis::create_env(
+        "minimap2=2.30.*",
+        env_name = "minimap-env",
+        overwrite = TRUE,
+        verbose = "silent"
+      )
       "minimap-env"
     }
   ),
@@ -194,7 +211,8 @@ list(
   # use a wrapper function in here("code", "targets_functions.R")
   tar_target(
     bam_files,
-    sam_to_bam(mapped_sams,
+    sam_to_bam(
+      mapped_sams,
       path_tmp = here::here("data", "tmp"),
       path_folder_out = here::here("data", "outputs", "bams"),
       threads = 2,
@@ -206,7 +224,8 @@ list(
   # use a wrapper function in here("code", "targets_functions.R")
   tar_target(
     sorted_bams, # Sorted and Indexed
-    sort_index(bam_files,
+    sort_index(
+      bam_files,
       path_tmp = here::here("data", "tmp"),
       path_folder_out = here::here("data", "outputs", "sorted_bams"),
       threads = 2,

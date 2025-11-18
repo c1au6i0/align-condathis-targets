@@ -34,15 +34,15 @@ environment, while still maintaining reproducibility.
 
 The package `condathis` is used to:
 
-1)  Create environments with specific versions of the CLI tools needed.
+1) Create environments with specific versions of the CLI tools needed.
     See example below.
 
 ``` r
-## Create an environment with gsutil v5.33
-condathis::create_env("gsutil==5.33", env_name = "gsutil-env")
+## Create an environment with gsutil v5.35
+condathis::create_env("gsutil==5.35", env_name = "gsutil-env")
 ```
 
-2)  Interact with those environments and launch the CLI commands. See
+2) Interact with those environments and launch the CLI commands. See
     example below.
 
 ``` r
@@ -88,30 +88,127 @@ library(targets)
 # tar_dir()
 targets::tar_make()
 #> Loading required package: parallelly
-#> here() starts at /Users/luciorq/projects/clones/align-condathis-targets
-#> ✔ skipped target samtools_env
-#> ✔ skipped target minimap_env
-#> ✔ skipped target rna_files_file
-#> ▶ dispatched target fastp_env
-#> ● completed target fastp_env [2.669 seconds, 62 bytes]
-#> ✔ skipped target gsutil_env
-#> ✔ skipped target wget_env
-#> ✔ skipped target fastq_path
-#> ✔ skipped target reference_files
-#> ✔ skipped target rna_files
-#> ✔ skipped target reference_mmi
-#> ✔ skipped target rna_mapping
-#> ✔ skipped branch trimmed_fastq_qc_ca20143f0fae43e9
-#> ✔ skipped branch trimmed_fastq_qc_6f135ab8bf1a9cb5
-#> ✔ skipped pattern trimmed_fastq_qc
-#> ✔ skipped branch mapped_sams_d241dbb2d8120a23
-#> ✔ skipped branch mapped_sams_3c0cda8129e92eb0
-#> ✔ skipped pattern mapped_sams
-#> ✔ skipped branch bam_files_5c0a6881bee73101
-#> ✔ skipped branch bam_files_e73d037ef7aa1ce0
-#> ✔ skipped pattern bam_files
-#> ✔ skipped branch sorted_bams_bcf10dcc743dc79b
-#> ✔ skipped branch sorted_bams_b3b2d89238686ae2
-#> ✔ skipped pattern sorted_bams
-#> ▶ ended pipeline [3.471 seconds]
+#> here() starts at /Users/luciorq/workspaces/temp/align-condathis-targets
+#> + samtools_env dispatched
+#> ✔ samtools_env completed [7s, 65 B]
+#> + minimap_env dispatched
+#> ✔ minimap_env completed [3s, 64 B]
+#> + fastp_env dispatched
+#> ✔ fastp_env completed [2.9s, 62 B]
+#> + gsutil_env dispatched
+#> ✔ gsutil_env completed [10.5s, 63 B]
+#> + wget_env dispatched
+#> ✔ wget_env completed [2.9s, 61 B]
+#> + trimmed_fastq_qc declared [2 branches]
+#> ✔ trimmed_fastq_qc completed [441ms, 936.66 kB]
+#> + mapped_sams declared [2 branches]
+#> ✔ mapped_sams completed [11s, 5.33 kB]
+#> + bam_files declared [2 branches]
+#> + sorted_bams declared [2 branches]
+#> ✔ ended pipeline [42.6s, 9 completed, 10 skipped]
+```
+
+Check output
+
+``` r
+sorted_bams_path <- targets::tar_read(sorted_bams)
+
+bam_header <- condathis::run(
+  "samtools", "view", "-H", sorted_bams_path[1],
+  env_name = "samtools-env",
+  verbose = "silent"
+)
+
+cat(bam_header$stdout)
+#> @HD  VN:1.6  SO:coordinate
+#> @SQ  SN:1    LN:249250621
+#> @SQ  SN:2    LN:243199373
+#> @SQ  SN:3    LN:198022430
+#> @SQ  SN:4    LN:191154276
+#> @SQ  SN:5    LN:180915260
+#> @SQ  SN:6    LN:171115067
+#> @SQ  SN:7    LN:159138663
+#> @SQ  SN:8    LN:146364022
+#> @SQ  SN:9    LN:141213431
+#> @SQ  SN:10   LN:135534747
+#> @SQ  SN:11   LN:135006516
+#> @SQ  SN:12   LN:133851895
+#> @SQ  SN:13   LN:115169878
+#> @SQ  SN:14   LN:107349540
+#> @SQ  SN:15   LN:102531392
+#> @SQ  SN:16   LN:90354753
+#> @SQ  SN:17   LN:81195210
+#> @SQ  SN:18   LN:78077248
+#> @SQ  SN:19   LN:59128983
+#> @SQ  SN:20   LN:63025520
+#> @SQ  SN:21   LN:48129895
+#> @SQ  SN:22   LN:51304566
+#> @SQ  SN:X    LN:155270560
+#> @SQ  SN:Y    LN:59373566
+#> @SQ  SN:MT   LN:16569
+#> @SQ  SN:GL000207.1   LN:4262
+#> @SQ  SN:GL000226.1   LN:15008
+#> @SQ  SN:GL000229.1   LN:19913
+#> @SQ  SN:GL000231.1   LN:27386
+#> @SQ  SN:GL000210.1   LN:27682
+#> @SQ  SN:GL000239.1   LN:33824
+#> @SQ  SN:GL000235.1   LN:34474
+#> @SQ  SN:GL000201.1   LN:36148
+#> @SQ  SN:GL000247.1   LN:36422
+#> @SQ  SN:GL000245.1   LN:36651
+#> @SQ  SN:GL000197.1   LN:37175
+#> @SQ  SN:GL000203.1   LN:37498
+#> @SQ  SN:GL000246.1   LN:38154
+#> @SQ  SN:GL000249.1   LN:38502
+#> @SQ  SN:GL000196.1   LN:38914
+#> @SQ  SN:GL000248.1   LN:39786
+#> @SQ  SN:GL000244.1   LN:39929
+#> @SQ  SN:GL000238.1   LN:39939
+#> @SQ  SN:GL000202.1   LN:40103
+#> @SQ  SN:GL000234.1   LN:40531
+#> @SQ  SN:GL000232.1   LN:40652
+#> @SQ  SN:GL000206.1   LN:41001
+#> @SQ  SN:GL000240.1   LN:41933
+#> @SQ  SN:GL000236.1   LN:41934
+#> @SQ  SN:GL000241.1   LN:42152
+#> @SQ  SN:GL000243.1   LN:43341
+#> @SQ  SN:GL000242.1   LN:43523
+#> @SQ  SN:GL000230.1   LN:43691
+#> @SQ  SN:GL000237.1   LN:45867
+#> @SQ  SN:GL000233.1   LN:45941
+#> @SQ  SN:GL000204.1   LN:81310
+#> @SQ  SN:GL000198.1   LN:90085
+#> @SQ  SN:GL000208.1   LN:92689
+#> @SQ  SN:GL000191.1   LN:106433
+#> @SQ  SN:GL000227.1   LN:128374
+#> @SQ  SN:GL000228.1   LN:129120
+#> @SQ  SN:GL000214.1   LN:137718
+#> @SQ  SN:GL000221.1   LN:155397
+#> @SQ  SN:GL000209.1   LN:159169
+#> @SQ  SN:GL000218.1   LN:161147
+#> @SQ  SN:GL000220.1   LN:161802
+#> @SQ  SN:GL000213.1   LN:164239
+#> @SQ  SN:GL000211.1   LN:166566
+#> @SQ  SN:GL000199.1   LN:169874
+#> @SQ  SN:GL000217.1   LN:172149
+#> @SQ  SN:GL000216.1   LN:172294
+#> @SQ  SN:GL000215.1   LN:172545
+#> @SQ  SN:GL000205.1   LN:174588
+#> @SQ  SN:GL000219.1   LN:179198
+#> @SQ  SN:GL000224.1   LN:179693
+#> @SQ  SN:GL000223.1   LN:180455
+#> @SQ  SN:GL000195.1   LN:182896
+#> @SQ  SN:GL000212.1   LN:186858
+#> @SQ  SN:GL000222.1   LN:186861
+#> @SQ  SN:GL000200.1   LN:187035
+#> @SQ  SN:GL000193.1   LN:189789
+#> @SQ  SN:GL000194.1   LN:191469
+#> @SQ  SN:GL000225.1   LN:211173
+#> @SQ  SN:GL000192.1   LN:547496
+#> @SQ  SN:NC_007605    LN:171823
+#> @SQ  SN:hs37d5   LN:35477943
+#> @PG  ID:minimap2 PN:minimap2 VN:2.30-r1287   CL:minimap2 -ax sr -t 2 /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/reference/Homo_sapiens_assembly19_1000genomes_decoy.mmi /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/trimmed/subj1_L001_R1_001_trimmed.fastq.gz /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/trimmed/subj1_L001_R2_001_trimmed.fastq.gz
+#> @PG  ID:samtools PN:samtools PP:minimap2 VN:1.22.1   CL:samtools view -hb -@ 2 /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/aligned_sam/subj11.sam
+#> @PG  ID:samtools.1   PN:samtools PP:samtools VN:1.22.1   CL:samtools sort -T /Users/luciorq/workspaces/temp/align-condathis-targets/data/tmp -@ 2 -o /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/sorted_bams/sorted_subj11.bam /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/bams/subj11.bam
+#> @PG  ID:samtools.2   PN:samtools PP:samtools.1   VN:1.22.1   CL:samtools view -H /Users/luciorq/workspaces/temp/align-condathis-targets/data/outputs/sorted_bams/sorted_subj11.bam
 ```
