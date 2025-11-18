@@ -71,7 +71,8 @@ list(
       condathis::create_env(
         "fastp=0.23.4",
         env_name = "fastp-env",
-        overwrite = TRUE
+        overwrite = TRUE,
+        verbose = "silent"
       )
       "fastp-env"
     }
@@ -114,7 +115,8 @@ list(
       condathis::create_env(
         packages = package_string,
         env_name = "wget-env",
-        overwrite = TRUE
+        overwrite = TRUE,
+        verbose = "silent"
       )
       "wget-env"
     }
@@ -126,7 +128,8 @@ list(
       condathis::create_env(
         "gsutil=5.35",
         env_name = "gsutil-env",
-        overwrite = TRUE
+        overwrite = TRUE,
+        verbose = "silent"
       )
       "gsutil-env"
     }
@@ -138,7 +141,8 @@ list(
       condathis::create_env(
         "samtools=1.22.*",
         env_name = "samtools-env",
-        overwrite = TRUE
+        overwrite = TRUE,
+        verbose = "silent"
       )
       "samtools-env"
     }
@@ -150,7 +154,8 @@ list(
       condathis::create_env(
         "minimap2=2.30.*",
         env_name = "minimap-env",
-        overwrite = TRUE
+        overwrite = TRUE,
+        verbose = "silent"
       )
       "minimap-env"
     }

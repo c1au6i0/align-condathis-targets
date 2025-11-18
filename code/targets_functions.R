@@ -55,7 +55,8 @@ fastp <- function(
     "-j",
     json_out,
     other_args,
-    env_name = conda_env
+    env_name = conda_env,
+    verbose = "silent"
   )
 
   out <- c(r1_r2_out["r1"], r1_r2_out["r2"], html_out, json_out)
